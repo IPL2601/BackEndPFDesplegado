@@ -14,23 +14,36 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-		@Bean
-		public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-	        httpSecurity.cors(cors -> cors.configurationSource(request -> {
-	            CorsConfiguration corsConfiguration = new CorsConfiguration();
-	            corsConfiguration.setAllowedOrigins(Arrays.asList(""));
-	            corsConfiguration.setAllowedMethods(Arrays.asList(""));
-	            corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
-	            return corsConfiguration;
-	        })).csrf(csrf -> csrf.disable()).authorizeHttpRequests(aut -> aut.anyRequest().permitAll());
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
 
-	        return httpSecurity.build();
-	    }
+        return httpSecurity.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(Arrays.asList("https://doitwebsite.netlify.app"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+        corsConfiguration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
