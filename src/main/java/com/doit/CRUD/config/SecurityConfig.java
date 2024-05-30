@@ -1,5 +1,7 @@
 package com.doit.CRUD.config;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,27 +9,27 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-	 @SuppressWarnings({ "deprecation", "removal" })
-	@Bean
-	    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	        http
-	            .authorizeRequests(authorizeRequests ->
-	                authorizeRequests
-	                    .anyRequest().permitAll() // Permitir todas las solicitudes sin autenticación
-	            )
-	            .csrf().disable() 
-	            .formLogin().disable()
-	            .httpBasic().disable();
-	        return http.build();
+		@Bean
+		public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+	        httpSecurity.cors(cors -> cors.configurationSource(request -> {
+	            CorsConfiguration corsConfiguration = new CorsConfiguration();
+	            corsConfiguration.setAllowedOrigins(Arrays.asList(""));
+	            corsConfiguration.setAllowedMethods(Arrays.asList(""));
+	            corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+	            return corsConfiguration;
+	        })).csrf(csrf -> csrf.disable()).authorizeHttpRequests(aut -> aut.anyRequest().permitAll());
+
+	        return httpSecurity.build();
 	    }
 
     @Bean
