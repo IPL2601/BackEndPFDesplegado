@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.doit.CRUD.Model.Usuario;
 import com.doit.CRUD.service.UsuarioService;
-
+@CrossOrigin(origins = "https://doitwebsite.netlify.app")
 @RestController
 @RequestMapping("users")
 public class UsuarioController {
