@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.doit.CRUD.Model.Task;
 import com.doit.CRUD.service.TaskService;
-
+@CrossOrigin(origins = "https://doitwebsite.netlify.app")
 @RestController
 @RequestMapping("tasks")
 public class TaskController {
